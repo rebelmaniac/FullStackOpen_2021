@@ -38,7 +38,7 @@ const Button = (props) => {
 }
 
 const Statistics = (props) => {
-  let all = allClicks(props.good, props.bad, props.neutral)
+  let all = props.good + props.bad + props.neutral
   console.log('all: ' + all)
 
   if (all === 0) {
@@ -64,7 +64,7 @@ const renderStatistics = (good, neutral, bad, all) => {
       <Statistic text='bad' value={bad} />
       <Statistic text='all' value={all} />
       <Statistic text='average' value={averageClicks(good, bad, all)} />
-      <Statistic text='positive' value={positiveClicks(good, all)} /> 
+      <Statistic text='positive' value={positiveClicks(good, all) + ' %'} /> 
     </div>
   );
 }
@@ -77,15 +77,9 @@ const Statistic = (props) => {
   );
 }
 
-const allClicks = (good, bad, neutral) => {
-  return (
-    good + bad + neutral
-  );
-}
-
 const averageClicks = (good, bad, all) => {
   return(
-    (good + (-bad)) / all
+    (good - bad) / all
    );
 }
 
