@@ -1,22 +1,32 @@
 import React, { useState } from 'react'
 
-const App = () => {
-  // save clicks of each button to its own state
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
-  const feedback = 'give feedback'
-  const statistics = 'statistics'
+const HEADER_1 = 'give feedback';
+const HEADER_2 = 'statistics';
 
+const BUTTON_1 = 'good';
+const BUTTON_2 = 'neutral';
+const BUTTON_3 = 'bad';
+
+const TOTAL = 'all';
+const AVERAGE = 'average';
+const POSITIVE = 'positive';
+
+const NO_FEEDBACK = 'No Feedback Given';
+
+const App = () => {
+
+  const [val_1, setter_1] = useState(0);
+  const [val_2, setter_2] = useState(0);
+  const [val_3, setter_3] = useState(0);
 
   return (
     <div>
-      <Header header={feedback} />
-      <Button name={'good'} value={good} setClick={setGood} />
-      <Button name={'neutral'} value={neutral} setClick={setNeutral}  />
-      <Button name={'bad'} value={bad} setClick={setBad} />
-      <Header header={statistics} />
-      <Statistics good={good} neutral={neutral} bad={bad}/>
+      <Header header={HEADER_1} />
+      <Button name={BUTTON_1} value={val_1} setClick={setter_1} />
+      <Button name={BUTTON_2} value={val_2} setClick={setter_2} />
+      <Button name={BUTTON_3} value={val_3} setClick={setter_3} />
+      <Header header={HEADER_2} />
+      <Statistics val_1={val_1} val_2={val_2} val_3={val_3} />
     </div>
   );
 }
@@ -31,63 +41,48 @@ const Header = (props) => {
 
 const Button = (props) => {
   return (
-    <button onClick={() => props.setClick(props.value + 1)}>
+    <button onClick={ () => props.setClick(props.value + 1) }>
       {props.name}
     </button>
   );
 }
 
 const Statistics = (props) => {
-  let all = props.good + props.bad + props.neutral
-  console.log('all: ' + all)
 
-  if (all === 0) {
+  let total = props.val_1 + props.val_2 + props.val_3;
+
+  if (total === 0) {
     return (
-      <div>
-        <p>No Feedback Given</p>
-      </div>
+      <p>{NO_FEEDBACK}</p>
     );
-    
   }
   else {
     return (
-      renderStatistics(props.good, props.neutral, props.bad, all)
+      <table>
+        <tbody>
+          <Statistic text={BUTTON_1} value={props.val_1} />
+          <Statistic text={BUTTON_2} value={props.val_2} />
+          <Statistic text={BUTTON_3} value={props.val_3} />
+          <Statistic text={TOTAL} value={total} />
+          <Statistic text={AVERAGE} value={average(props.val_1, props.val_3, total)} />
+          <Statistic text={POSITIVE} value={positive_percent(props.val_1, total) + ' %'} />
+        </tbody>
+      </table>
     );
   }
-}
-
-const renderStatistics = (good, neutral, bad, all) => {
-  return(
-    <div>
-      <Statistic text='good' value={good} />
-      <Statistic text='neutral' value={neutral} />
-      <Statistic text='bad' value={bad} />
-      <Statistic text='all' value={all} />
-      <Statistic text='average' value={averageClicks(good, bad, all)} />
-      <Statistic text='positive' value={positiveClicks(good, all) + ' %'} /> 
-    </div>
-  );
 }
 
 const Statistic = (props) => {
   return (
-    <div>
-      {props.text} {props.value} 
-    </div>
+    <tr>
+      <td>{props.text}</td>
+      <td>{props.value}</td>
+    </tr>
   );
 }
 
-const averageClicks = (good, bad, all) => {
-  return(
-    (good - bad) / all
-   );
-}
+const average = (a, b, total) => (a - b) / total;
 
-const positiveClicks = (good, all) => {
-  return (
-    (good / all) * 100
-  );
-}
-
+const positive_percent = (a, total) => (a / total) * 100;
 
 export default App
