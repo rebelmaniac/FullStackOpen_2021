@@ -1,19 +1,13 @@
 import React, { useState } from 'react'
 
-const HEADER_1 = 'give feedback';
-const HEADER_2 = 'statistics';
-
-const BUTTON_1 = 'good';
-const BUTTON_2 = 'neutral';
-const BUTTON_3 = 'bad';
-
-const TOTAL = 'all';
-const AVERAGE = 'average';
-const POSITIVE = 'positive';
-
-const NO_FEEDBACK = 'No Feedback Given';
-
 const App = () => {
+  
+  const HEADER_1 = 'give feedback';
+  const HEADER_2 = 'statistics';
+
+  const BUTTON_1 = 'good';
+  const BUTTON_2 = 'neutral';
+  const BUTTON_3 = 'bad';
 
   const [val_1, setter_1] = useState(0);
   const [val_2, setter_2] = useState(0);
@@ -49,7 +43,15 @@ const Button = (props) => {
 
 const Statistics = (props) => {
 
+  const TOTAL = 'all';
+  const AVERAGE = 'average';
+  const POSITIVE = 'positive';
+
+  const NO_FEEDBACK = 'No Feedback Given';
+
   let total = props.val_1 + props.val_2 + props.val_3;
+  const average = (a, b, total) => (a - b) / total;
+  const positive_percent = (a, total) => (a / total) * 100;
 
   if (total === 0) {
     return (
@@ -80,9 +82,5 @@ const Statistic = (props) => {
     </tr>
   );
 }
-
-const average = (a, b, total) => (a - b) / total;
-
-const positive_percent = (a, total) => (a / total) * 100;
 
 export default App
