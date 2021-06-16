@@ -11,42 +11,50 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blod tests when dianosing patients'
   ]
   
-  const BUTTON_Vote = "Vote"
-  const BUTTON_NextAnecdote = "Next Anecdote"
+  const BUTTON_Vote = "Vote";
+  const BUTTON_NextAnecdote = "Next Anecdote";
+
+  const HEADER_1 = "Anecdote of the day";
+  const HEADER_2 = "Anecdote with the most votes";
 
   const [selected, setSelected] = useState(0)
   const [points, setPoints] = useState(new Array(anecdotes.length).fill(0))
 
-  const selectIndex = () => setSelected(Math.floor(Math.random() * anecdotes.length));
+  const selectIndex = () => setSelected(Math.floor(Math.random() * anecdotes.length))
 
-  const voteUpdate = (selected, points) => {
+  const voteUpdate = () => {
     const copy = [...points]
     copy[selected] += 1
     setPoints(copy)
   }
 
+  const mostVotes = () => {
+    let most = 0;
+    for (let i = 0; i < points.length; ++i) {
+      if (points[i] > points[most]) {
+        most = i
+      }
+    }
+    return most
+  }
+
   return (
     <div>
-      <Selected anecdotes= {anecdotes} selected= {selected} points= {points} />
+      <Header text= {HEADER_1} />
+      <Selected anecdotes= {anecdotes} position= {selected} points= {points} />
       <div>
-        <VoteButton text= {BUTTON_Vote} handleClick= {voteUpdate} value= {selected} points= {points} />
-        <Button text= {BUTTON_NextAnecdote} handleClick= {selectIndex}  />
+        <Button text= {BUTTON_Vote} handleClick= {voteUpdate} />
+        <Button text= {BUTTON_NextAnecdote} handleClick= {selectIndex} />
       </div>
+      <Header text= {HEADER_2} />
+      <Selected anecdotes= {anecdotes} position= {mostVotes()} points= {points} />
     </div>
   )
 }
 
 const Button = (props) => {
   return (
-    <button onClick={ () => props.handleClick() }>
-      {props.text}
-    </button>
-  )
-}
-
-const VoteButton = (props) => {
-  return (
-    <button onClick={ () => props.handleClick(props.value, props.points) }>
+    <button onClick={props.handleClick}>
       {props.text}
     </button>
   )
@@ -56,13 +64,21 @@ const Selected = (props) => {
   return (
     <div>
       <div>
-        {props.anecdotes[props.selected]}
-      </div>
-      <div>
-        {"has " + props.points[props.selected] + " votes"} 
+        {props.anecdotes[props.position]}
+        <br/>
+        {"has " + props.points[props.position] + " votes"} 
       </div>
     </div>
   )
 }
 
+const Header = (props) => {
+  return (
+    <div>
+      <h1>
+        {props.text}
+      </h1>
+    </div>
+  )
+}
 export default App
